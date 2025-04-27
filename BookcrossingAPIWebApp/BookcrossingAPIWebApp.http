@@ -1,0 +1,6 @@
+@BookcrossingAPIWebApp_HostAddress = http://localhost:5275
+
+GET {{BookcrossingAPIWebApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
