@@ -1,0 +1,24 @@
+﻿body {
+    background-color: #fffbea;
+    color: #333;
+}
+
+.btn-warning {
+    background-color: #f7c948;
+    border-color: #f7c948;
+    color: #333;
+}
+
+    .btn-warning:hover {
+        background-color: #f4b400;
+        border-color: #f4b400;
+    }
+
+.table-warning {
+    background-color: #fef6d2;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #f7c948;
+}

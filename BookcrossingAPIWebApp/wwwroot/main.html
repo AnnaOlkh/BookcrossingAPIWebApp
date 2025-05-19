@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookcrossing Platform</title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/site.css">
+</head>
+<body class="bg-light text-dark">
+    <div class="container py-5">
+        <h1 class="text-warning mb-4">📚 Bookcrossing Platform</h1>
+
+        <!-- Book code search -->
+        <div class="mb-5">
+            <h4 class="text-warning">Have a book code?</h4>
+            <div class="input-group">
+                <input type="text" id="search-code" class="form-control" placeholder="Enter code (e.g. ABCD1234)">
+                <button class="btn btn-warning" onclick="goToBookDetails()">Find Book</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Add book button -->
+        <div class="text-center mb-4">
+            <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                ➕ Add Your Book
+            </button>
+        </div>
+
+        <!-- Add Book Modal -->
+        <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-warning" id="addBookModalLabel">Add Book to Bookcrossing</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add-book-form" onsubmit="addBook(); return false;">
+                            <div class="mb-2">
+                                <input type="text" id="title" class="form-control" placeholder="Title" required>
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" id="author" class="form-control" placeholder="Author" required>
+                            </div>
+                            <div class="mb-2">
+                                <textarea id="description" class="form-control" placeholder="Description"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <input type="url" id="cover-url" class="form-control" placeholder="Cover Image URL">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="pages" class="form-control" placeholder="Page Count" required>
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="location-id" class="form-control" placeholder="Location ID (optional)">
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">Add Book</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Code Modal -->
+        <div class="modal fade" id="codeModal" tabindex="-1" aria-labelledby="codeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-success" id="codeModalLabel">🎉 Book Registered</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Your book was successfully added to the system.</p>
+                        <h4 class="text-warning">Code: <span id="generated-code"></span></h4>
+                        <p>Write this code on the physical copy to let others track it!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/site.css">
+</head>
+<body class="bg-light text-dark">
+    <div class="container py-5">
+        <h1 class="text-warning mb-4">📖 Book Details</h1>
+
+        <div id="book-details" class="mb-5">
+            <!-- Populated dynamically -->
+        </div>
+
+        <div id="action-form" class="card p-4 d-none">
+            <h5 class="mb-3" id="action-title"></h5>
+            <form id="location-form" onsubmit="submitLocationChange(); return false;">
+                <div class="mb-3">
+                    <label for="location-id" class="form-label">Location ID</label>
+                    <input type="number" class="form-control" id="location-id" required>
+                </div>
+                <button type="submit" class="btn btn-warning">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/book.js"></script>
+</body>
+</html>

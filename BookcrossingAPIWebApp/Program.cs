@@ -1,7 +1,10 @@
+using BookcrossingAPIWebApp.Models;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddDbContext<BookcrossingAPIContext>(option => option.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -16,10 +19,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 app.UseAuthorization();
 
-app.MapControllers();
-
+app.MapFallbackToFile("Main.html");
 app.Run();
