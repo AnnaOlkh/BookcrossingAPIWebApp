@@ -8,18 +8,20 @@
 </head>
 <body class="bg-light text-dark">
     <div class="container py-5">
-        <h1 class="text-warning mb-4">📖 Book Details</h1>
-
-        <div id="book-details" class="mb-5">
-            <!-- Populated dynamically -->
-        </div>
+        <h1 class="text-warning mb-4">Book Details</h1>
+        <div id="message-container"></div>
+        <div id="book-details" class="mb-5"></div>
 
         <div id="action-form" class="card p-4 d-none">
             <h5 class="mb-3" id="action-title"></h5>
             <form id="location-form" onsubmit="submitLocationChange(); return false;">
-                <div class="mb-3">
-                    <label for="location-id" class="form-label">Location ID</label>
-                    <input type="number" class="form-control" id="location-id" required>
+                <!-- Блок вибору локації, схований або показується через JS -->
+                <div class="mb-3" id="location-select-block">
+                    <label for="location-select" class="form-label">Location</label>
+                    <select class="form-select" id="location-select" required>
+                        <option value="">Вибрати локацію</option>
+                        <!-- Варіанти додаються через JS -->
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-warning">Submit</button>
             </form>

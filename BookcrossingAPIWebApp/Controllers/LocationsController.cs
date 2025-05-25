@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookcrossingAPIWebApp.Models;
+using BookcrossingAPIWebApp.DTOs;
 
 namespace BookcrossingAPIWebApp.Controllers
 {
@@ -19,12 +20,16 @@ namespace BookcrossingAPIWebApp.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Locations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocations()
         {
-            return await _context.Locations.ToListAsync();
+            return await _context.Locations
+                .Select(l => new LocationDto
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    City = l.City
+                }).ToListAsync();
         }
 
         // GET: api/Locations/5

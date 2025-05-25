@@ -112,7 +112,41 @@ namespace BookcrossingAPIWebApp.Controllers
 
             return Ok(new { code = bookCopy.Code });
         }
+        [HttpPost("change-location")]
+        public async Task<IActionResult> ChangeLocation([FromBody] ChangeLocationDto dto)
+        {
+            var bookCopy = await _context.BookCopies
+                .FirstOrDefaultAsync(bc => bc.Code == dto.Code);
 
+            if (bookCopy == null)
+                return NotFound("Копію книги не знайдено!");
+
+            bookCopy.CurrentLocationId = dto.LocationId;
+            bookCopy.IsAvailable = true;
+
+            var bookRoute = new BookRoute
+            {
+                BookCopyId = bookCopy.Id,
+                LocationId = dto.LocationId,
+                VisitedAt = DateTime.Now
+            };
+            _context.BookRoutes.Add(bookRoute);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        [HttpPost("pickup")]
+        public async Task<IActionResult> PickupBook([FromBody] PickupBookDto dto)
+        {
+            var bookCopy = await _context.BookCopies
+                .FirstOrDefaultAsync(bc => bc.Code == dto.Code);
+
+            if (bookCopy == null)
+                return NotFound("Копію книги не знайдено!");
+            bookCopy.CurrentLocationId = null;
+            bookCopy.IsAvailable = false;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
 
         // PUT: api/BookCopies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
