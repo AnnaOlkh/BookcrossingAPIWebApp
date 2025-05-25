@@ -22,3 +22,8 @@
     background-color: #fff;
     border: 1px solid #f7c948;
 }
+.book-card:hover, .book-card:focus {
+    box-shadow: 0 0 10px 0 #ffc107, 0 0 0 2px #fff7e6;
+    border-color: #ffc107;
+    transition: box-shadow .2s;
+}

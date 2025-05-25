@@ -23,10 +23,24 @@ namespace BookcrossingAPIWebApp.Controllers
 
         // GET: api/BookCopies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookCopy>>> GetBookCopies()
+        public async Task<ActionResult<IEnumerable<BookCopyListDto>>> GetBookCopies()
         {
-            return await _context.BookCopies.ToListAsync();
+            var copies = await _context.BookCopies
+                .Where(bc => bc.IsAvailable)
+                .Include(bc => bc.Book)
+                .Select(bc => new BookCopyListDto
+                {
+                    Code = bc.Code,
+                    Title = bc.Book.Title,
+                    Author = bc.Book.Author,
+                    CoverImageUrl = bc.Book.CoverImageUrl,
+                    IsAvailable = bc.IsAvailable
+                })
+                .ToListAsync();
+
+            return copies;
         }
+
 
         [HttpGet("by-code/{code}")]
         public async Task<ActionResult<BookCopyDetailsDto>> GetByCode(string code)
@@ -39,9 +53,9 @@ namespace BookcrossingAPIWebApp.Controllers
             if (bookCopy == null)
                 return NotFound();
 
-            var latestLocation = bookCopy.Route
-                .OrderByDescending(r => r.VisitedAt)
-                .FirstOrDefault()?.Location;
+            var currentLocation = bookCopy.CurrentLocationId.HasValue
+                ? await _context.Locations.FindAsync(bookCopy.CurrentLocationId)
+                : null;
 
             var dto = new BookCopyDetailsDto
             {
@@ -52,8 +66,9 @@ namespace BookcrossingAPIWebApp.Controllers
                 Description = bookCopy.Book.Description,
                 CoverImageUrl = bookCopy.Book.CoverImageUrl,
                 PageCount = bookCopy.Book.PageCount,
-                LastLocation = latestLocation != null
-                    ? $"{latestLocation.Name}, {latestLocation.City}, {latestLocation.Country}"
+                CurrentLocationId = bookCopy.CurrentLocationId,
+                CurrentLocationName = currentLocation != null
+                    ? $"{currentLocation.Name}, {currentLocation.City}, {currentLocation.Country}"
                     : null,
                 Route = bookCopy.Route
                     .OrderBy(r => r.VisitedAt)
@@ -91,7 +106,8 @@ namespace BookcrossingAPIWebApp.Controllers
 
             var bookCopy = new BookCopy
             {
-                BookId = existingBook.Id
+                BookId = existingBook.Id,
+                IsAvailable = true
             };
 
             _context.BookCopies.Add(bookCopy);

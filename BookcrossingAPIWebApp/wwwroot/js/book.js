@@ -28,45 +28,38 @@ function displayBook(data) {
                 <p><strong>Кількість сторінок:</strong> ${data.pageCount}</p>
                 <p><strong>Код:</strong> ${data.code}</p>
                 <p><strong>Доступна:</strong> ${data.isAvailable ? 'Так' : 'Ні'}</p>
-                <p><strong>Місце зберігання:</strong> ${data.lastLocation || 'Невідомо'}</p>
+                <p><strong>Місце зберігання:</strong> ${data.currentLocationName || 'Невідомо'}</p>
                 ${data.coverImageUrl ? `<img src="${data.coverImageUrl}" class="img-fluid mt-3" style="max-height: 200px;">` : ''}
                 <hr>
                 <strong>Маршрут книги:</strong>
                 <ul>${data.route.map(r => `<li>${r}</li>`).join('')}</ul>
+            </div>
+        </div>
     `;
-
-    // Додаємо кнопку "Забрати книгу", якщо книга доступна
-    if (data.isAvailable) {
-        bookHtml += `
-            <button id="pickup-btn" class="btn btn-success mt-3">Забрати книгу</button>
-        `;
-    }
-
-    bookHtml += `</div></div>`;
     container.innerHTML = bookHtml;
 
-    // Прив'язуємо подію до кнопки "Забрати книгу"
-    if (data.isAvailable) {
-        document.getElementById('pickup-btn').onclick = () => pickupBook(data.code);
-    }
-
-    // ... решта коду для форми ...
+    // Отримуємо DOM-елементи
     const form = document.getElementById('action-form');
     const actionTitle = document.getElementById('action-title');
     const locationSelectBlock = document.getElementById('location-select-block');
 
-    // Кнопка "залишити книгу" і вибір локації — тільки якщо доступна або місце невідомо
-    if (data.isAvailable || data.lastLocation === null || data.lastLocation === 'Unknown' || data.lastLocation === 'Невідомо') {
+    // Книга у тебе "на руках" (не доступна, і останнє місце невідоме)
+    if (!data.isAvailable && (!data.currentLocationName)) {
+        form.classList.remove('d-none'); // ПОКАЗАТИ форму!
         actionTitle.innerText = 'Залишити цю книгу у локації';
-        form.classList.remove('d-none');
         locationSelectBlock.classList.remove('d-none');
         showLocationSelect();
-    } else {
-        // Не показуємо вибір локації, тільки місце зберігання
-        actionTitle.innerHTML = `<b>Місце зберігання:</b> ${data.lastLocation}`;
-        form.classList.add('d-none'); // Ховаємо форму
+    }
+    else if (data.isAvailable) {
+        form.classList.add('d-none');
+        container.innerHTML += `<div class="d-flex justify-content-center"><button id="pickup-btn" class="btn btn-success mt-4">Забрати книгу</button></div>`;
+        document.getElementById('pickup-btn').onclick = () => pickupBook(data.code);
+    }
+    else {
+        form.classList.add('d-none');
     }
 }
+
 
 
 async function loadLocations() {
@@ -91,15 +84,6 @@ async function showLocationSelect() {
         select.innerHTML += `<option value="${loc.id}">${loc.name}, ${loc.city}</option>`;
     });
 }
-
-/*function submitLocationChange() {
-    const select = document.getElementById('location-select');
-    const locationId = parseInt(select.value, 10);
-    const code = new URLSearchParams(window.location.search).get('code');
-    if (!code || isNaN(locationId)) return;
-
-    alert(`(TODO) Відправити оновлення локації для коду ${code} (locationId = ${locationId})`);
-}*/
 function submitLocationChange() {
     const select = document.getElementById('location-select');
     const locationId = parseInt(select.value, 10);
@@ -147,6 +131,7 @@ function pickupBook(code) {
         })
         .then(() => {
             showMessage('Книгу успішно забрано!', 'success');
+            // Оновлюємо тільки деталі книги, не всю сторінку!
             fetch(`${apiBase}/by-code/${code}`)
                 .then(res => res.json())
                 .then(data => displayBook(data));
@@ -171,7 +156,7 @@ function showMessage(message, type = 'success') {
             alertElem.classList.remove('show');
             setTimeout(() => {
                 alertElem.remove();
-            }, 3000);
+            }, 4000);
         }
     }, 2000);
 }

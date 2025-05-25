@@ -12,8 +12,8 @@ public class BookCopyDetailsDto
     public string? CoverImageUrl { get; set; }
     public int PageCount { get; set; }
 
-    // last known location
-    public string? LastLocation { get; set; }
+    public int? CurrentLocationId { get; set; }
+    public string CurrentLocationName { get; set; }
 
     // route (optional)
     public List<string> Route { get; set; }
